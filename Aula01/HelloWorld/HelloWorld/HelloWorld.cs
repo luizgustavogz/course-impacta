@@ -6,7 +6,15 @@ namespace HelloWorld
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Primeiro código C# do curso Impacta");
+            bool isAdulto = true;
+            decimal valor = 10.55m;
+            double vlaor2 = 10.55;
+            char sexo = 'M';
+
+            var nome = "Luiz Gustavo";
+            var idade = 19;
+
+            Console.WriteLine($"{nome}, {idade} anos");
         }
     }
 }
