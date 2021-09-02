@@ -13,6 +13,13 @@ namespace HelloWorld
             }
 
             Console.WriteLine();
+            for (var i = args.Length; i > 0; i--)
+            {
+                var argumento = args[i - 1];
+                Console.WriteLine($"for ao contrário: {argumento}");
+            }
+
+            Console.WriteLine();
             foreach(var argumento in args)
             {
                 Console.WriteLine($"Argumento lido no foreach: {argumento}");
