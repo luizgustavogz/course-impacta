@@ -27,12 +27,14 @@ namespace ComeçandoOO
                 Console.WriteLine("Café vencido");
             }
 
+            /*
             Console.WriteLine($"Café está na validade? {cafe.IsProdutoValido()}");
             Console.WriteLine($"Leite está na validade? {leite.IsProdutoValido()}");
 
             cafe.AtualizarDataValidade(newValidade);
             Console.WriteLine($"\nValidade do café atualizada! {newValidade}");
             Console.WriteLine($"Café ainda está na validade? {cafe.IsProdutoValido()}\n");
+            */
 
             Cliente cliente = new Cliente() {
                 Id = 1,
@@ -48,8 +50,8 @@ namespace ComeçandoOO
             };
 
             List<Pessoa> pessoas = new List<Pessoa>();
-            pessoas.Add(cliente);
-            pessoas.Add(funcionario);
+            //pessoas.Add(cliente);
+            //pessoas.Add(funcionario);
 
             foreach(var p in pessoas)
             {
@@ -101,6 +103,16 @@ namespace ComeçandoOO
             }
 
             pagamento.EfetuarPagamento();
+
+            Console.WriteLine();
+            ValidationUtil<string> validation = new ValidationUtil<string>();
+            validation.isValid("teste");
+
+            ValidationUtil<int> validation2 = new ValidationUtil<int>();
+            validation2.isValid(12);
+
+            ValidationUtil<bool> validation3 = new ValidationUtil<bool>();
+            validation3.isValid(true);
         }
     }
 }
