@@ -1,4 +1,4 @@
-﻿namespace ComeçandoOO
+﻿namespace ComeçandoOO.Models
 {
     abstract class Pessoa
     {

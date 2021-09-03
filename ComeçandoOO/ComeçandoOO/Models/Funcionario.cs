@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace ComeçandoOO
+namespace ComeçandoOO.Models
 {
     class Funcionario : Pessoa
     {

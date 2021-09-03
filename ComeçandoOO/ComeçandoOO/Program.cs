@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using ComeçandoOO.Models;
+using ComeçandoOO.Models.Pagamento;
 
 namespace ComeçandoOO
 {
@@ -59,7 +61,46 @@ namespace ComeçandoOO
                 {
                     Console.WriteLine($"Funcionário: {p.Nome}, foi demitido? {((Funcionario)p).Demissao}\n");
                 }
+                else
+                {
+                    Console.WriteLine($"Pessoa: {p.Nome}");
+                }
             }
+
+            Console.WriteLine("Selecione a forma de pagamento (1 - Crédito, 2 - Débito, 3 - VA, 4 - Dinheiro, 5 - Pix):");
+            var tipoDePagamentoString = Console.ReadLine();
+            var tipoDePagamento = int.Parse(tipoDePagamentoString);
+
+            FormaDePagamento pagamento;
+            switch (tipoDePagamento) 
+            {
+                case 1:
+                    pagamento = new CreditoImpl();
+                    break;
+                case 2:
+                    pagamento = new DebitoImpl();
+                    break;
+                case 3:
+                    pagamento = new VAImpl();
+                    break;
+                case 4:
+                    pagamento = new Dinheiro();
+                    break;
+                case 5:
+                    pagamento = new Pix();
+                    break;
+                default:
+                    pagamento = null;
+                    break;
+            }
+
+            if (pagamento == null)
+            {
+                Console.WriteLine("Forma de pagamento inválida, refaça o procedimento");
+                return;
+            }
+
+            pagamento.EfetuarPagamento();
         }
     }
 }
