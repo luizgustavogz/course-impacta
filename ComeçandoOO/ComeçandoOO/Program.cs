@@ -70,39 +70,51 @@ namespace ComeçandoOO
             }
 
             Console.WriteLine("Selecione a forma de pagamento (1 - Crédito, 2 - Débito, 3 - VA, 4 - Dinheiro, 5 - Pix):");
-            var tipoDePagamentoString = Console.ReadLine();
-            var tipoDePagamento = int.Parse(tipoDePagamentoString);
-
-            FormaDePagamento pagamento;
-            switch (tipoDePagamento) 
+            try
             {
-                case 1:
-                    pagamento = new CreditoImpl();
-                    break;
-                case 2:
-                    pagamento = new DebitoImpl();
-                    break;
-                case 3:
-                    pagamento = new VAImpl();
-                    break;
-                case 4:
-                    pagamento = new Dinheiro();
-                    break;
-                case 5:
-                    pagamento = new Pix();
-                    break;
-                default:
-                    pagamento = null;
-                    break;
-            }
+                var tipoDePagamentoString = Console.ReadLine();
+                var tipoDePagamento = int.Parse(tipoDePagamentoString);
 
-            if (pagamento == null)
+                FormaDePagamento pagamento;
+                switch (tipoDePagamento)
+                {
+                    case 1:
+                        pagamento = new CreditoImpl();
+                        break;
+                    case 2:
+                        pagamento = new DebitoImpl();
+                        break;
+                    case 3:
+                        pagamento = new VAImpl();
+                        break;
+                    case 4:
+                        pagamento = new Dinheiro();
+                        break;
+                    case 5:
+                        pagamento = new Pix();
+                        break;
+                    default:
+                        throw new Exception("Nenhuma forma de pagamento encontrada");
+                }
+
+                pagamento.EfetuarPagamento();
+            }
+            catch(FormatException)
             {
-                Console.WriteLine("Forma de pagamento inválida, refaça o procedimento");
-                return;
+                Console.WriteLine("Forma de pagamento inválida. Erro de formatação, refaça o procedimento");
             }
-
-            pagamento.EfetuarPagamento();
+            catch (ArgumentNullException)
+            {
+                Console.WriteLine("Forma de pagamento inválida. Argumento nulo, refaça o procedimento");
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Forma de pagamento inválida. Ocorreu um erro, refaça o procedimento");
+            }
+            finally // finally é opcional
+            {
+                Console.WriteLine("Fim try/catch");
+            }
 
             Console.WriteLine();
             ValidationUtil<string> validation = new ValidationUtil<string>();
