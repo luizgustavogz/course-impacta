@@ -9,14 +9,15 @@ namespace ComeçandoOO
     {
         static void Main(string[] args)
         {
-            var newValidade = new DateTime(2021,5,10);
-            Produto cafe = new Produto(1, "Café 3 Corações", "Café premium torrado", "Alimento", 9.90, new DateTime(2022,9,6));
-            Produto leite = new Produto(2, "Leite UHT Integral", "Leite Integral pasteurizado", "Alimento", 6.70, new DateTime(2021,8,15));
-            
+            var newValidade = new DateTime(2021, 5, 10);
+            Produto cafe = new Produto(1, "Café 3 Corações", "Café premium torrado", "Alimento", 9.90, new DateTime(2022, 9, 6));
+            Produto leite = new Produto(2, "Leite UHT Integral", "Leite Integral pasteurizado", "Alimento", 6.70, new DateTime(2021, 8, 15));
+            Produto bolacha = new Produto(3, "Bolacha Marilan Salgada", "Bolacha água e sal", "Alimento", 4.50, new DateTime(2021, 12, 22));
+
             if (cafe.Valor > leite.Valor)
             {
                 Console.WriteLine("Café está mais caro que o leite\n");
-            } 
+            }
             else
             {
                 Console.WriteLine("Leite está mais caro que o café\n");
@@ -25,6 +26,16 @@ namespace ComeçandoOO
             if (!cafe.IsProdutoValido())
             {
                 Console.WriteLine("Café vencido");
+            }
+
+            if (!leite.IsProdutoValido())
+            {
+                Console.WriteLine("Leite vencido");
+            }
+
+            if (!bolacha.IsProdutoValido())
+            {
+                Console.WriteLine("Bolacha vencida");
             }
 
             /*
@@ -36,7 +47,8 @@ namespace ComeçandoOO
             Console.WriteLine($"Café ainda está na validade? {cafe.IsProdutoValido()}\n");
             */
 
-            Cliente cliente = new Cliente() {
+            Cliente cliente = new Cliente()
+            {
                 Id = 1,
                 Nome = "Luiz",
                 IsMaiorDeIdade = true
@@ -53,11 +65,11 @@ namespace ComeçandoOO
             //pessoas.Add(cliente);
             //pessoas.Add(funcionario);
 
-            foreach(var p in pessoas)
+            foreach (var p in pessoas)
             {
                 if (p is Cliente)
                 {
-                    Console.WriteLine($"Cliente: {p.Nome}, maior de idade? {((Cliente)p).IsMaiorDeIdade}\n");                    
+                    Console.WriteLine($"Cliente: {p.Nome}, maior de idade? {((Cliente)p).IsMaiorDeIdade}\n");
                 }
                 else if (p is Funcionario)
                 {
@@ -99,7 +111,7 @@ namespace ComeçandoOO
 
                 pagamento.EfetuarPagamento();
             }
-            catch(FormatException)
+            catch (FormatException)
             {
                 Console.WriteLine("Forma de pagamento inválida. Erro de formatação, refaça o procedimento");
             }
