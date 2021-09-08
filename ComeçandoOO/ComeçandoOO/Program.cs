@@ -81,7 +81,7 @@ namespace ComeçandoOO
                 }
             }
 
-            Console.WriteLine("Selecione a forma de pagamento (1 - Crédito, 2 - Débito, 3 - VA, 4 - Dinheiro, 5 - Pix):");
+            Console.WriteLine("\nSelecione a forma de pagamento (1 - Crédito, 2 - Débito, 3 - VA, 4 - Dinheiro, 5 - Pix):");
             try
             {
                 var tipoDePagamentoString = Console.ReadLine();
@@ -119,13 +119,13 @@ namespace ComeçandoOO
             {
                 Console.WriteLine("Forma de pagamento inválida. Argumento nulo, refaça o procedimento");
             }
-            catch (Exception)
+            catch (Exception) // Exceção de tipo genérico
             {
                 Console.WriteLine("Forma de pagamento inválida. Ocorreu um erro, refaça o procedimento");
             }
-            finally // finally é opcional
+            finally // Sempre executa no final do try/catch. Sendo opcional sua implementação
             {
-                Console.WriteLine("Fim try/catch");
+                Console.WriteLine("Nenhum erro encontrado. Obrigado pela compra!");
             }
 
             Console.WriteLine();
