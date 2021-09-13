@@ -54,7 +54,7 @@ namespace Exc1
                         }
                     }
                 }
-                Console.WriteLine("\nArquivo criado com sucesso!");
+                Console.WriteLine($"\nArquivo {name} criado com sucesso!");
             }
             catch (Exception e)
             {
