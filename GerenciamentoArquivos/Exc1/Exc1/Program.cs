@@ -8,48 +8,57 @@ namespace Exc1
     {
         static void Main(string[] args)
         {
-            string path = @"C:\Curso Impacta\projetos-git\course-impacta\GerenciamentoArquivos\exc1.txt";
-            List<string> linhas = new List<string>();
-
-            string linha, finish;
-            bool stopProcess = false;
+            string path = @"C:\Curso Impacta\projetos-git\course-impacta\GerenciamentoArquivos\";
 
             try
             {
-                if (!File.Exists(path))
+                Console.WriteLine("Nome do arquivo a ser criado:");
+                var name = Console.ReadLine();
+
+                if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
                 {
-                    do
+                    Console.WriteLine("Nome inválido. Refaça o processo");
+                    return;
+                }
+
+                string linha, finish;
+                bool stopProcess = false;
+                List<string> linhas = new List<string>();
+
+                do
+                {
+                    Console.WriteLine("Digite a linha para inserção:");
+                    linha = Console.ReadLine();
+
+                    if (!string.IsNullOrEmpty(linha) || !string.IsNullOrWhiteSpace(linha))
                     {
-                        Console.WriteLine("Digite a linha:");
-                        linha = Console.ReadLine();
+                        linhas.Add(linha);
+                    }
 
-                        if (!string.IsNullOrEmpty(linha) || !string.IsNullOrEmpty(linha))
-                        {
-                            Console.Write("Concluiu o preenchimento do arquivo (S - Sim/N - Nao)? ");
-                            finish = Console.ReadLine();
+                    Console.Write("Concluiu o preenchimento do arquivo (S - Sim/N - Nao)? ");
+                    finish = Console.ReadLine();
 
-                            if (finish.Trim().ToUpper() == "S" || finish.Trim().ToUpper() == "SIM")
-                            {
-                                stopProcess = true;
-                            }
-                            linhas.Add(linha);
-                        }
-                    } while (stopProcess == false);
+                    if (finish.Trim().ToUpper() == "S" || finish.Trim().ToUpper() == "SIM")
+                    {
+                        stopProcess = true;
+                    }
+                } while (stopProcess == false);
 
-                    using (StreamWriter sw = File.CreateText(path))
+                if (linhas.Count > 0)
+                {
+                    using (StreamWriter sw = File.CreateText($"{path}{name}.txt"))
                     {
                         foreach (var l in linhas)
                         {
                             sw.WriteLine(l);
                         }
                     }
-
-                    Console.WriteLine("\nArquivo criado com sucesso!");
                 }
+                Console.WriteLine("\nArquivo criado com sucesso!");
             }
             catch (Exception e)
             {
-                Console.WriteLine("Exception: " + e.Message);
+                Console.WriteLine("Ocorreu um erro: " + e.Message);
             }
         }
     }
