@@ -8,7 +8,7 @@ namespace Exc1
     {
         static void Main(string[] args)
         {
-            string path = @"C:\Curso Impacta\projetos-git\course-impacta\GerenciamentoArquivos\";
+            string path = @"C:\Curso Impacta\projetos-git\course-impacta\Exercícios\";
 
             try
             {
