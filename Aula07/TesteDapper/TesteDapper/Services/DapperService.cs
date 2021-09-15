@@ -10,7 +10,7 @@ namespace TesteDapper.Services
 {
     class DapperService
     {
-        public static void ConsultarLinhas(string conexao)
+        public static void Select(string conexao)
         {
             using (var db = new SqlConnection(conexao))
             {

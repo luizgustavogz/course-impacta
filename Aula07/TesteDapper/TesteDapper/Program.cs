@@ -38,7 +38,7 @@ namespace TesteDapper
                 switch (opcao)
                 {
                     case 1:
-                        DapperService.ConsultarLinhas(conexao);
+                        DapperService.Select(conexao);
                         break;
                     default:
                         Console.WriteLine("Opção informada não é válida");
