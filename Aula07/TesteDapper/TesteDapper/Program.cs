@@ -35,16 +35,26 @@ namespace TesteDapper
                 var opcaoStr = Console.ReadLine();
                 var opcao = int.Parse(opcaoStr);
 
+                var service = new DapperService(conexao);
+
                 switch (opcao)
                 {
                     case 1:
-                        DapperService.Select(conexao);
+                        service.Select();
+                        break;
+                    case 2:
+                        service.Insert();
+                        break;
+                    case 3:
+                        service.Update();
+                        break;
+                    case 4:
+                        service.Delete();
                         break;
                     default:
                         Console.WriteLine("Opção informada não é válida");
                         break;
                 }
-
             }
             catch (ArgumentException)
             {
@@ -57,7 +67,7 @@ namespace TesteDapper
             catch (Exception e)
             {
                 Console.WriteLine("Ocorreu erro ao processar dados via Dapper: " + e.Message);
-            }   
+            }
         }
     }
 }
