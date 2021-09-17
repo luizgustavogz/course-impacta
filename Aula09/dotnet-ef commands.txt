@@ -1,0 +1,5 @@
+dotnet-ef migrations add <nome>	// Adiciona uma migration com o <nome> especificado
+
+dotnet-ef migrations remove	// Remove as migrations criadas ANTES de serem enviadas para o banco
+
+dotnet-ef database update	// Pega as migrations adicionadas até o momento e envia para o banco
