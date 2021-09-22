@@ -8,20 +8,20 @@ using System.Threading.Tasks;
 
 namespace ProdutosEF.Models
 {
-    [Table("TB_PRODUTO")]
+    [Table("tblProduto")]
     class Produto
     {
         [Key]
-        [Column("ID_PRODUTO")]
+        [Column("Id_Produto")]
         public int Id { get; set; }
 
-        [Column("NM_PRODUTO", TypeName = "VARCHAR(100)")]
+        [Column("Nm_Produto", TypeName = "VARCHAR(100)")]
         public string Nome { get; set; }
 
-        [Column("VLR_PRODUTO")]
+        [Column("Vlr_Produto")]
         public decimal Valor { get; set; }
         
-        [Column("DT_VALIDADE")]
+        [Column("Dt_Validade")]
         public DateTime Validade { get; set; }
 
         public virtual ICollection<VendaItem> ItensDoProdutoVendido { get; set; }

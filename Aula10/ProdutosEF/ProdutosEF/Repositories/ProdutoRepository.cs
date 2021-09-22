@@ -11,5 +11,6 @@ namespace ProdutosEF.Repositories
     {
         List<Produto> ObterProdutos();
         Produto SelecionarProdutoPorId(int idProduto);
+        List<Produto> ObterItensPorProduto();
     }
 }

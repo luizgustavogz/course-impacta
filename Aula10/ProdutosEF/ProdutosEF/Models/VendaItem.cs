@@ -9,20 +9,20 @@ using System.Threading.Tasks;
 namespace ProdutosEF.Models
 {
 
-    [Table("TB_VENDA_ITEM")]
+    [Table("TblVenda_Item")]
     class VendaItem
     {
         [Key]
-        [Column("ID_VENDA_ITEM")]
+        [Column("Id_Venda_Item")]
         public int Id { get; set; }
 
-        [Column("ID_VENDA")]
+        [Column("Id_Venda")]
         public int IdVenda { get; set; }
 
-        [Column("ID_PRODUTO")]
+        [Column("Id_Produto")]
         public int IdProduto { get; set; }
 
-        [Column("QTD_ITEM")]
+        [Column("Qtd_Item")]
         public int Quantidade { get; set; }
 
         [ForeignKey("IdVenda")]

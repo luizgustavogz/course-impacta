@@ -9,17 +9,17 @@ using System.Threading.Tasks;
 namespace ProdutosEF.Models
 {
 
-    [Table("TB_VENDA")]
+    [Table("tblVenda")]
     class Venda
     {
         [Key]
-        [Column("ID_VENDA")]
+        [Column("Id_Venda")]
         public int Id { get; set; }
 
-        [Column("ID_USUARIO")]
+        [Column("Id_Usuario")]
         public int IdUsuario { get; set; }
 
-        [Column("VLR_TOTAL")]
+        [Column("Vlr_Total")]
         public decimal Total { get; set; }
 
         [ForeignKey("IdUsuario")]

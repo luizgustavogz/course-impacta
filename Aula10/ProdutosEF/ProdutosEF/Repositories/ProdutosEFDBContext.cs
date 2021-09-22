@@ -18,7 +18,7 @@ namespace ProdutosEF.Repositories
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseSqlServer("Server=localhost;Database=PRODUTOS_MERCADO_DB;User Id=sa;Password=Root@123;");
+            optionsBuilder.UseSqlServer("Server=localhost;Database=PRODUTOS_MERCADO;Integrated Security=True");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -3,6 +3,7 @@ using ProdutosEF.Repositories;
 using ProdutosEF.Repositories.Impl;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ProdutosEF
 {
@@ -17,11 +18,8 @@ namespace ProdutosEF
         {
             try
             {
-                Console.WriteLine("Informe qual operacao voce quer realizar no banco: (" +
-                    "1 - listar produtos, " +
-                    "2 - criar venda, " +
-                    "3 - obter vendas por usuario " +
-                    "4 - total de itens vendidos do produto)");
+                Console.WriteLine("Informe qual operação a ser realizada no banco:");
+                Console.WriteLine("1 - Listar produtos\t 2 - Criar venda\t 3 - Obter vendas por usuário\t 4 - Total de itens vendidos do produto");
                 var opcaoStr = Console.ReadLine();
                 var opcao = int.Parse(opcaoStr);
 
@@ -39,21 +37,27 @@ namespace ProdutosEF
                             ExibirProdutos(produtos);
                             break;
                         case 2:
-                            SolicitarProdutosEUsuario();
+                            CriarVenda();
+                            break;
+                        case 3:
+                            ObterVendasPorUsuario();
+                            break;
+                        case 4:
+                            ObterItensPorProduto();
                             break;
                         default:
-                            Console.WriteLine("Opcao informada nao e valida, tente novamente!");
+                            Console.WriteLine("Opção informada não é válida, tente novamente!");
                             break;
                     }
                 }
             }
-            catch (ArgumentException e)
+            catch (ArgumentException)
             {
-                Console.WriteLine("Voce informou um numero invalido, tente novamente!");
+                Console.WriteLine("Você informou um número inválido, tente novamente!");
             }
-            catch (FormatException e)
+            catch (FormatException)
             {
-                Console.WriteLine("Voce informou um numero invalido, tente novamente!");
+                Console.WriteLine("Você informou um número inválido, tente novamente!");
             }
             catch (Exception e)
             {
@@ -61,62 +65,111 @@ namespace ProdutosEF
             }
         }
 
-        private static void SolicitarProdutosEUsuario()
+        private static void ObterItensPorProduto()
+        {
+            var resultado = _produtoRepository.ObterItensPorProduto();
+            foreach (var dto in resultado)
+            {
+                Console.WriteLine("--------------------------------------------------");
+                Console.WriteLine($"Produto: {dto.Nome} foi vendido {dto.ItensDoProdutoVendido.Sum(e => e.Quantidade)} vezes");
+                foreach (var item in dto.ItensDoProdutoVendido)
+                {
+                    Console.WriteLine($"Item: {item.Id} quantidade: {item.Quantidade}");
+                }
+            }
+        }
+
+        private static void ObterVendasPorUsuario()
+        {
+            var resultado = _vendaRepository.ObterVendasPorUsuario();
+            foreach (var dto in resultado)
+            {
+                Console.WriteLine("--------------------------------------------------");
+                Console.WriteLine($"Usuário: {dto.Nome} efetuou {dto.QtdDeVendas} vendas com valor total de R$ {dto.ValorToralVendas}");
+                foreach(var venda in dto.Vendas)
+                {
+                    Console.WriteLine($"Venda: {venda.Id}, valor R$ {venda.Total}");
+                }
+            }
+        }
+
+        private static void CriarVenda()
         {
             Console.WriteLine("--------------------------------------------------");
             Console.WriteLine("Compra inicidada:");
             
-            var idUsuario = CapturarInformacoesInt("Id o usuario", null, null);
+            var idUsuario = CapturarInformacoesInt("Id do usuário", null, null);
             var usuario = _usuarioRepository.SelecionarPorId(idUsuario);
             if(usuario == null)
             {
-                Console.WriteLine("Usuario informado nao encontrado! ");
+                Console.WriteLine("Usuário informado não encontrado! ");
                 return;
             }
 
-            var idProduto = CapturarInformacoesInt("Id do produto", null, null);
-            var produto = _produtoRepository.SelecionarProdutoPorId(idProduto);
-            if(produto == null)
+            bool permanecerRodando = true;
+            int idProduto;
+            int qtdItem;
+            Produto produto;
+            Venda venda = null;
+            VendaItem item;
+            do
             {
-                Console.WriteLine("Produto informado nao encontrado! ");
-                return;
-            }
-            
-            var qtdItem = CapturarInformacoesInt("Quantidade de itens vendidos", 1, 100);
-            if (qtdItem == 0)
-            {
-                Console.WriteLine("Quantidade invalida ");
-                return;
-            }
+                idProduto = CapturarInformacoesInt("Id do produto", null, null);
+                produto = _produtoRepository.SelecionarProdutoPorId(idProduto);
+                if (produto == null)
+                {
+                    Console.WriteLine("Produto informado não encontrado! ");
+                    return;
+                }
 
-            Venda venda = new Venda();
-            venda.IdUsuario = idUsuario;
-            venda.Total = produto.Valor * qtdItem;
+                qtdItem = CapturarInformacoesInt("Quantidade de itens vendidos", 1, 100);
+                if (qtdItem == 0)
+                {
+                    Console.WriteLine("Quantidade inválida ");
+                    return;
+                }
 
-            _vendaRepository.Salvar(venda);
+                if(venda == null)
+                {
+                    venda = new Venda();
+                    venda.IdUsuario = idUsuario;
+                    _vendaRepository.Salvar(venda);
+                }
+                
+                item = new VendaItem()
+                {
+                    IdProduto = idProduto,
+                    Quantidade = qtdItem,
+                    IdVenda = venda.Id
+                };
 
-            var item = new VendaItem()
-            {
-                IdProduto = idProduto,
-                Quantidade = qtdItem,
-                IdVenda = venda.Id
-            };
+                _vendaItemRepository.Salvar(item);
 
-            _vendaItemRepository.Salvar(item);
+                venda.Total += produto.Valor * qtdItem;
 
-            Console.WriteLine("Compra concluida");
+                Console.WriteLine("Compra concluída? (S - Sim / N - Nao)");
+                var compraConcluida = Console.ReadLine();
+                if(compraConcluida.Trim().ToUpper() == "S" || compraConcluida.Trim().ToUpper() == "SIM"){
+                    permanecerRodando = false;
+                }
+
+            } while (permanecerRodando == true);
+
+            _vendaRepository.Atualizar(venda);
+
+            Console.WriteLine("--------------------------------------------------");
+            Console.WriteLine($"Compra concluída! Valor total = R$ {venda.Total}");
             Console.WriteLine("--------------------------------------------------");
         }
 
         private static void ExibirProdutos(List<Produto> produtos)
         {
             Console.WriteLine("--------------------------------------------------");
-            Console.WriteLine("Produtos Disponiveis:");
-            produtos.ForEach(produto => Console.WriteLine($"Id = {produto.Id}, " +
-                $"Nome = {produto.Nome}, " +
-                $"Valor = {produto.Valor}, " +
-                $"Validade = {produto.Validade.ToShortDateString()}"));
-
+            Console.WriteLine("Produtos válidos e disponíveis:");
+            produtos.ForEach(produto => Console.WriteLine($"Id: {produto.Id}\t " +
+                $"Nome: {produto.Nome}\t " +
+                $"Valor: {produto.Valor}\t " +
+                $"Validade: {produto.Validade.ToShortDateString()}"));
             Console.WriteLine("--------------------------------------------------");
         }
 
@@ -136,7 +189,7 @@ namespace ProdutosEF
             var infoStr = Console.ReadLine();
             if (string.IsNullOrEmpty(infoStr) || string.IsNullOrWhiteSpace(infoStr))
             {
-                Console.WriteLine($"{tipoDeInfo} e obrigatorio");
+                Console.WriteLine($"{tipoDeInfo} é obrigatório");
                 return 0;
             }
 
@@ -155,7 +208,7 @@ namespace ProdutosEF
             }
             catch (Exception)
             {
-                Console.WriteLine($"{tipoDeInfo} nao e valido");
+                Console.WriteLine($"{tipoDeInfo} não é válido");
                 return 0;
             }
         }

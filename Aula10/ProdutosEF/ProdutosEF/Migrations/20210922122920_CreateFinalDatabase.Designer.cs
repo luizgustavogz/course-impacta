@@ -10,8 +10,8 @@ using ProdutosEF.Repositories;
 namespace ProdutosEF.Migrations
 {
     [DbContext(typeof(ProdutosEFDBContext))]
-    [Migration("20210920194608_CreateUserVendaseItensTable")]
-    partial class CreateUserVendaseItensTable
+    [Migration("20210922122920_CreateFinalDatabase")]
+    partial class CreateFinalDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,24 +26,24 @@ namespace ProdutosEF.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("ID_PRODUTO")
+                        .HasColumnName("Id_Produto")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Nome")
                         .HasColumnType("VARCHAR(100)")
-                        .HasColumnName("NM_PRODUTO");
+                        .HasColumnName("Nm_Produto");
 
                     b.Property<DateTime>("Validade")
                         .HasColumnType("datetime2")
-                        .HasColumnName("DT_VALIDADE");
+                        .HasColumnName("Dt_Validade");
 
                     b.Property<decimal>("Valor")
                         .HasColumnType("decimal(18,2)")
-                        .HasColumnName("VLR_PRODUTO");
+                        .HasColumnName("Vlr_Produto");
 
                     b.HasKey("Id");
 
-                    b.ToTable("TB_PRODUTO");
+                    b.ToTable("tblProduto");
                 });
 
             modelBuilder.Entity("ProdutosEF.Models.Usuario", b =>
@@ -51,16 +51,16 @@ namespace ProdutosEF.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("ID_USUARIO")
+                        .HasColumnName("Id_Usuario")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Nome")
                         .HasColumnType("VARCHAR(100)")
-                        .HasColumnName("NM_USUARIO");
+                        .HasColumnName("Nm_Usuario");
 
                     b.HasKey("Id");
 
-                    b.ToTable("TB_USUARIO");
+                    b.ToTable("tblUsuario");
                 });
 
             modelBuilder.Entity("ProdutosEF.Models.Venda", b =>
@@ -68,22 +68,22 @@ namespace ProdutosEF.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("ID_VENDA")
+                        .HasColumnName("Id_Venda")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("IdUsuario")
                         .HasColumnType("int")
-                        .HasColumnName("ID_USUARIO");
+                        .HasColumnName("Id_Usuario");
 
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(18,2)")
-                        .HasColumnName("VLR_TOTAL");
+                        .HasColumnName("Vlr_Total");
 
                     b.HasKey("Id");
 
                     b.HasIndex("IdUsuario");
 
-                    b.ToTable("TB_VENDA");
+                    b.ToTable("tblVenda");
                 });
 
             modelBuilder.Entity("ProdutosEF.Models.VendaItem", b =>
@@ -91,20 +91,20 @@ namespace ProdutosEF.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("ID_VENDA_ITEM")
+                        .HasColumnName("Id_Venda_Item")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("IdProduto")
                         .HasColumnType("int")
-                        .HasColumnName("ID_PRODUTO");
+                        .HasColumnName("Id_Produto");
 
                     b.Property<int>("IdVenda")
                         .HasColumnType("int")
-                        .HasColumnName("ID_VENDA");
+                        .HasColumnName("Id_Venda");
 
                     b.Property<int>("Quantidade")
                         .HasColumnType("int")
-                        .HasColumnName("QTD_ITEM");
+                        .HasColumnName("Qtd_Item");
 
                     b.HasKey("Id");
 
@@ -112,7 +112,7 @@ namespace ProdutosEF.Migrations
 
                     b.HasIndex("IdVenda");
 
-                    b.ToTable("TB_VENDA_ITEM");
+                    b.ToTable("TblVenda_Item");
                 });
 
             modelBuilder.Entity("ProdutosEF.Models.Venda", b =>

@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 namespace ProdutosEF.Models
 {
 
-    [Table("TB_USUARIO")]
+    [Table("tblUsuario")]
     class Usuario
     {
         [Key]
-        [Column("ID_USUARIO")]
+        [Column("Id_Usuario")]
         public int Id { get; set; }
 
-        [Column("NM_USUARIO", TypeName = "VARCHAR(100)")]
+        [Column("Nm_Usuario", TypeName = "VARCHAR(100)")]
         public string Nome { get; set; }
 
         public virtual ICollection<Venda> Vendas { get; set; }

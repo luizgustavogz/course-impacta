@@ -1,4 +1,5 @@
-﻿using ProdutosEF.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using ProdutosEF.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,11 @@ namespace ProdutosEF.Repositories.Impl
         public ProdutoRepositoryImpl(ProdutosEFDBContext context)
         {
             _context = context;
+        }
+
+        public List<Produto> ObterItensPorProduto()
+        {
+            return _context.Produto.Include(e => e.ItensDoProdutoVendido).ToList();
         }
 
         public List<Produto> ObterProdutos()
