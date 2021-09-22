@@ -17,8 +17,11 @@ namespace RazorTeste.Pages
             _logger = logger;
         }
 
+        public string DataAtual { get; private set; }
+
         public void OnGet()
         {
+            DataAtual = $"Horário atual do servidor é: {DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()}";
         }
     }
 }
