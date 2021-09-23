@@ -25,7 +25,8 @@ namespace TesteMVC.Controllers
 
         public IActionResult Privacy()
         {
-            return View();
+            var model = new Index2Model() { Message = "Termos de privacidade" };
+            return View(model);
         }
 
         public IActionResult About()
@@ -36,6 +37,13 @@ namespace TesteMVC.Controllers
         public IActionResult Contact()
         {
             return View();
+        }
+
+        public IActionResult Index2()
+        {
+            var now = DateTime.Now;
+            var model = new Index2Model() { Message = $"Horário do servidor é: {now.ToShortDateString()} {now.ToShortTimeString()}" };
+            return View(model);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
