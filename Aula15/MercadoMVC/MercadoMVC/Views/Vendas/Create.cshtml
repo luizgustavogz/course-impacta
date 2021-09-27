@@ -1,0 +1,94 @@
+﻿@model MercadoMVC.Models.Venda
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Venda</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label for="IdUsuario" class="control-label">Usuario</label>
+                @if (Model != null && Model.Id > 0)
+                {
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="IdUsuario" />
+                    <input name="NomeUsario" value="@Model.Usuario.Nome" class="form-control" disabled="disabled" />
+                }
+                else
+                {
+                    <select asp-for="IdUsuario" class="form-control" asp-items="ViewBag.IdUsuario"></select>
+                    <span class="text-danger">@ViewData["ErrorUsuario"]</span>
+                }
+            </div>
+            <div class="form-group">
+                <label for="IdProduto" class="control-label">Produto</label>
+                <select name="IdProduto" class="form-control" asp-items="ViewBag.Produtos"></select>
+                <span class="text-danger">@ViewData["ErrorProduto"]</span>
+            </div>
+            <div class="form-group">
+                <label for="Quantidade" class="control-label">Quantidade</label>
+                <input name="Quantidade" class="form-control" type="number" />
+                <span class="text-danger">@ViewData["ErrorQtd"]</span>
+            </div>
+            <div class="form-group">
+                @if (Model != null && Model.Id > 0)
+                {
+                    <input type="submit" value="Add" class="btn btn-primary" />
+                    <a asp-action="Index" class="btn btn-secondary">Finalizar</a>
+                }
+                else
+                {
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                }
+            </div>
+
+        </form>
+    </div>
+    <div class="col-md-4">
+        @if (Model != null && Model.Id > 0)
+        {
+            <span>Total: R$@Model.Total</span>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            Produto
+                        </th>
+                        <th>
+                            Valor
+                        </th>
+                        <th>
+                            Quantidade
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Itens)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Produto.Nome)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Produto.Valor)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Quantidade)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
