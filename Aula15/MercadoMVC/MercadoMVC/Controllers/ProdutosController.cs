@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MercadoMVC.Data;
 using MercadoMVC.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MercadoMVC.Controllers
 {
     [Controller]
     [Route("[controller]")]
+    //[Authorize]
     public class ProdutosController : Controller
     {
         private readonly MercadoMVCContext _context;

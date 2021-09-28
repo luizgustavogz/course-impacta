@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MercadoMVC.Data;
 using MercadoMVC.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProjetoMercadoMVC.Controllers
 {
     [Controller]
-    [Route("[controller]")]
+    [Route("/")]
+    //[Authorize]
     public class VendasController : Controller
     {
         private readonly MercadoMVCContext _context;
@@ -24,6 +26,7 @@ namespace ProjetoMercadoMVC.Controllers
         // GET: Vendas
         public async Task<IActionResult> Index()
         {
+            var shortName = User.Identity.Name;
             var projetoMercadoMVCContext = _context.Venda.Include(v => v.Usuario).Include(v => v.Itens).ThenInclude(i => i.Produto);
             return View(await projetoMercadoMVCContext.ToListAsync());
         }
@@ -50,7 +53,7 @@ namespace ProjetoMercadoMVC.Controllers
         [Route("Create")]
         public IActionResult Create()
         {
-            ViewData["IdUsuario"] = new SelectList(_context.Usuario, "Id", "Nome");
+            //ViewData["IdUsuario"] = new SelectList(_context.Usuario, "Id", "Nome");
             ViewData["Produtos"] = new SelectList(_context.Produto, "Id", "Nome");
             return View();
         }
@@ -96,7 +99,7 @@ namespace ProjetoMercadoMVC.Controllers
                 {
                     venda = new Venda()
                     {
-                        IdUsuario = idUsuario,
+                        //IdUsuario = idUsuario,
                         Total = produto.Valor * quantidade
                     };
 
@@ -125,12 +128,12 @@ namespace ProjetoMercadoMVC.Controllers
 
             if (venda != null)
             {
-                ViewData["IdUsuario"] = new SelectList(_context.Usuario, "Id", "Nome", venda.IdUsuario);
+                //ViewData["IdUsuario"] = new SelectList(_context.Usuario, "Id", "Nome", venda.IdUsuario);
                 vendaAtualizada = await getVendaAtualizada(venda.Id);
             }
             else
             {
-                ViewData["IdUsuario"] = new SelectList(_context.Usuario, "Id", "Nome");
+                //ViewData["IdUsuario"] = new SelectList(_context.Usuario, "Id", "Nome");
             }
 
             return View(vendaAtualizada);

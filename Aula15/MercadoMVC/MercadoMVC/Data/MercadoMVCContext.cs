@@ -4,17 +4,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MercadoMVC.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace MercadoMVC.Data
 {
-    public class MercadoMVCContext : DbContext
+    public class MercadoMVCContext : IdentityDbContext
     {
         public MercadoMVCContext (DbContextOptions<MercadoMVCContext> options)
             : base(options)
         {
         }
-
-        public DbSet<MercadoMVC.Models.Usuario> Usuario { get; set; }
 
         public DbSet<MercadoMVC.Models.Produto> Produto { get; set; }
 
