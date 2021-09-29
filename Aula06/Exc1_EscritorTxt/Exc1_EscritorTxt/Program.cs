@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace Exc1
+namespace Exc1_EscritorTxt
 {
     class Program
     {
