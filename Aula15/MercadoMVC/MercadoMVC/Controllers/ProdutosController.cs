@@ -26,6 +26,11 @@ namespace MercadoMVC.Controllers
         // GET: Produtos
         public async Task<IActionResult> Index()
         {
+            if (!User.Identity.IsAuthenticated || User.IsInRole("ADMIN"))
+            {
+                return Redirect("/Identity/Account/Login");
+            }
+
             return View(await _context.Produto.ToListAsync());
         }
 
@@ -33,6 +38,12 @@ namespace MercadoMVC.Controllers
         [Route("Details/{id}")]
         public async Task<IActionResult> Details(int? id)
         {
+
+            if (!User.Identity.IsAuthenticated || User.IsInRole("ADMIN"))
+            {
+                return Redirect("/Identity/Account/Login");
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -52,6 +63,11 @@ namespace MercadoMVC.Controllers
         [Route("Create")]
         public IActionResult Create()
         {
+            if (!User.Identity.IsAuthenticated || User.IsInRole("ADMIN"))
+            {
+                return Redirect("/Identity/Account/Login");
+            }
+
             return View();
         }
 
@@ -85,6 +101,11 @@ namespace MercadoMVC.Controllers
         [Route("Edit/{id}")]
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!User.Identity.IsAuthenticated || User.IsInRole("ADMIN"))
+            {
+                return Redirect("/Identity/Account/Login");
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -145,6 +166,11 @@ namespace MercadoMVC.Controllers
         [Route("Delete/{id}")]
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!User.Identity.IsAuthenticated || User.IsInRole("ADMIN"))
+            {
+                return Redirect("/Identity/Account/Login");
+            }
+
             if (id == null)
             {
                 return NotFound();

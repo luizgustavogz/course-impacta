@@ -31,10 +31,14 @@ namespace MercadoMVC
             services.AddDbContext<MercadoMVCContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+            services
+                .AddDefaultIdentity<IdentityUser>(options =>
+                {
+                    options.SignIn.RequireConfirmedAccount = false;
+                })
                 .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<MercadoMVCContext>();
-            services.AddControllersWithViews();
+                .AddEntityFrameworkStores<MercadoMVCContext>()
+                .AddDefaultTokenProviders();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

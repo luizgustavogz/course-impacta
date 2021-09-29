@@ -12,20 +12,10 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label for="IdUsuario" class="control-label">Usuario</label>
-                @if (Model != null && Model.Id > 0)
-                {
-                    <input type="hidden" asp-for="Id" />
-                    <input type="hidden" asp-for="IdUsuario" />
-                    //<input name="NomeUsario" value="@Model.Usuario.Nome" class="form-control" disabled="disabled" />
-                }
-                else
-                {
-                    <select asp-for="IdUsuario" class="form-control" asp-items="ViewBag.IdUsuario"></select>
-                    <span class="text-danger">@ViewData["ErrorUsuario"]</span>
-                }
-            </div>
+            @if (Model != null && Model.Id > 0)
+            {
+                <input type="hidden" asp-for="Id" />
+            }
             <div class="form-group">
                 <label for="IdProduto" class="control-label">Produto</label>
                 <select name="IdProduto" class="form-control" asp-items="ViewBag.Produtos"></select>

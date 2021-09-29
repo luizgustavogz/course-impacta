@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using MercadoMVC.Data;
 using MercadoMVC.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace ProjetoMercadoMVC.Controllers
 {
@@ -17,24 +18,44 @@ namespace ProjetoMercadoMVC.Controllers
     public class VendasController : Controller
     {
         private readonly MercadoMVCContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public VendasController(MercadoMVCContext context)
+        public VendasController(MercadoMVCContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Vendas
         public async Task<IActionResult> Index()
         {
-            var shortName = User.Identity.Name;
-            var projetoMercadoMVCContext = _context.Venda.Include(v => v.Usuario).Include(v => v.Itens).ThenInclude(i => i.Produto);
-            return View(await projetoMercadoMVCContext.ToListAsync());
+            if (User.Identity.IsAuthenticated)
+            {
+                var isAdmin = User.IsInRole("ADMIN");
+                var user = await _userManager.FindByEmailAsync(User.Identity.Name);
+
+                var projetoMercadoMVCContext = _context.Venda
+                    .Include(v => v.Usuario)
+                    .Include(v => v.Itens)
+                    .ThenInclude(i => i.Produto)
+                    .Where(v => isAdmin == true || (v.IdUsuario == user.Id));
+                return View(await projetoMercadoMVCContext.ToListAsync());
+            }
+            else
+            {
+                return Redirect("/Identity/Account/Login");
+            }            
         }
 
         // GET: Vendas/Details/5
         [Route("Details/{id}")]
         public async Task<IActionResult> Details(int? id)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Redirect("/Identity/Account/Login");
+            }
+            
             if (id == null)
             {
                 return NotFound();
@@ -53,6 +74,11 @@ namespace ProjetoMercadoMVC.Controllers
         [Route("Create")]
         public IActionResult Create()
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Redirect("/Identity/Account/Login");
+            }
+
             //ViewData["IdUsuario"] = new SelectList(_context.Usuario, "Id", "Nome");
             ViewData["Produtos"] = new SelectList(_context.Produto, "Id", "Nome");
             return View();
@@ -64,11 +90,11 @@ namespace ProjetoMercadoMVC.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("Create")]
-        public async Task<IActionResult> Create(int idUsuario, int idProduto, int quantidade, int? id)
+        public async Task<IActionResult> Create(int idProduto, int quantidade, int? id)
         {
-            if (idUsuario <= 0)
+            if (!User.Identity.IsAuthenticated)
             {
-                ViewData["ErrorUsuario"] = "Usuario nao informado";
+                return Redirect("/Identity/Account/Login");
             }
 
             if (idProduto <= 0)
@@ -93,10 +119,12 @@ namespace ProjetoMercadoMVC.Controllers
                 venda = await getVendaAtualizada(id);
             }
 
-            if (idUsuario > 0 && idProduto > 0 && quantidade > 0)
+            if (idProduto > 0 && quantidade > 0)
             {
                 if (id == null || id == 0)
                 {
+                    var user = await _userManager.FindByEmailAsync(User.Identity.Name);
+
                     venda = new Venda()
                     {
                         //IdUsuario = idUsuario,
@@ -138,18 +166,15 @@ namespace ProjetoMercadoMVC.Controllers
 
             return View(vendaAtualizada);
         }
-
-        private bool VendaExists(int id)
-        {
-            return _context.Venda.Any(e => e.Id == id);
-        }
-
         private async Task<Venda> getVendaAtualizada(int? id)
         {
+            var isAdmin = User.IsInRole("ADMIN");
+            var user = await _userManager.FindByEmailAsync(User.Identity.Name);
+
             var venda = await _context.Venda
                 .Include(v => v.Usuario)
                 .Include(v => v.Itens).ThenInclude(i => i.Produto)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == id && isAdmin == true || (m.IdUsuario == user.Id));
 
             return venda;
         }
