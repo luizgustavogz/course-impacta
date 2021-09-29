@@ -26,7 +26,7 @@ namespace MercadoMVC.Controllers
         // GET: Produtos
         public async Task<IActionResult> Index()
         {
-            if (!User.Identity.IsAuthenticated || User.IsInRole("ADMIN"))
+            if (!User.Identity.IsAuthenticated || !User.IsInRole("ADMIN"))
             {
                 return Redirect("/Identity/Account/Login");
             }
@@ -39,7 +39,7 @@ namespace MercadoMVC.Controllers
         public async Task<IActionResult> Details(int? id)
         {
 
-            if (!User.Identity.IsAuthenticated || User.IsInRole("ADMIN"))
+            if (!User.Identity.IsAuthenticated || !User.IsInRole("ADMIN"))
             {
                 return Redirect("/Identity/Account/Login");
             }
@@ -63,7 +63,7 @@ namespace MercadoMVC.Controllers
         [Route("Create")]
         public IActionResult Create()
         {
-            if (!User.Identity.IsAuthenticated || User.IsInRole("ADMIN"))
+            if (!User.Identity.IsAuthenticated || !User.IsInRole("ADMIN"))
             {
                 return Redirect("/Identity/Account/Login");
             }
@@ -79,6 +79,11 @@ namespace MercadoMVC.Controllers
         [Route("Create")]
         public async Task<IActionResult> Create(int id, string nome, DateTime validade, string valor)
         {
+            if (!User.Identity.IsAuthenticated || !User.IsInRole("ADMIN"))
+            {
+                return Redirect("/Identity/Account/Login");
+            }
+
             var valorConvertido = valor.Replace(".", ",");
             var produto = new Produto()
             {
@@ -101,7 +106,7 @@ namespace MercadoMVC.Controllers
         [Route("Edit/{id}")]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (!User.Identity.IsAuthenticated || User.IsInRole("ADMIN"))
+            if (!User.Identity.IsAuthenticated || !User.IsInRole("ADMIN"))
             {
                 return Redirect("/Identity/Account/Login");
             }
@@ -130,6 +135,11 @@ namespace MercadoMVC.Controllers
         [Route("Edit/{id}")]
         public async Task<IActionResult> Edit(int id, string nome, DateTime validade, string valorAExibir)
         {
+            if (!User.Identity.IsAuthenticated || !User.IsInRole("ADMIN"))
+            {
+                return Redirect("/Identity/Account/Login");
+            }
+
             var valorConvertido = valorAExibir.Replace(".", ",");
             var produto = new Produto()
             {
@@ -166,7 +176,7 @@ namespace MercadoMVC.Controllers
         [Route("Delete/{id}")]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (!User.Identity.IsAuthenticated || User.IsInRole("ADMIN"))
+            if (!User.Identity.IsAuthenticated || !User.IsInRole("ADMIN"))
             {
                 return Redirect("/Identity/Account/Login");
             }
@@ -192,6 +202,11 @@ namespace MercadoMVC.Controllers
         [Route("Delete/{id}")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (!User.Identity.IsAuthenticated || !User.IsInRole("ADMIN"))
+            {
+                return Redirect("/Identity/Account/Login");
+            }
+
             var produto = await _context.Produto.FindAsync(id);
             _context.Produto.Remove(produto);
             await _context.SaveChangesAsync();

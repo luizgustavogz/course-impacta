@@ -14,7 +14,6 @@ namespace ProjetoMercadoMVC.Controllers
 {
     [Controller]
     [Route("/")]
-    //[Authorize]
     public class VendasController : Controller
     {
         private readonly MercadoMVCContext _context;
@@ -35,16 +34,16 @@ namespace ProjetoMercadoMVC.Controllers
                 var user = await _userManager.FindByEmailAsync(User.Identity.Name);
 
                 var projetoMercadoMVCContext = _context.Venda
-                    .Include(v => v.Usuario)
-                    .Include(v => v.Itens)
-                    .ThenInclude(i => i.Produto)
-                    .Where(v => isAdmin == true || (v.IdUsuario == user.Id));
+                        .Include(v => v.Usuario)
+                        .Include(v => v.Itens)
+                        .ThenInclude(i => i.Produto)
+                        .Where(v => isAdmin == true || (v.IdUsuario == user.Id));
                 return View(await projetoMercadoMVCContext.ToListAsync());
             }
             else
             {
                 return Redirect("/Identity/Account/Login");
-            }            
+            }
         }
 
         // GET: Vendas/Details/5
@@ -55,7 +54,7 @@ namespace ProjetoMercadoMVC.Controllers
             {
                 return Redirect("/Identity/Account/Login");
             }
-            
+
             if (id == null)
             {
                 return NotFound();
@@ -124,10 +123,9 @@ namespace ProjetoMercadoMVC.Controllers
                 if (id == null || id == 0)
                 {
                     var user = await _userManager.FindByEmailAsync(User.Identity.Name);
-
                     venda = new Venda()
                     {
-                        //IdUsuario = idUsuario,
+                        IdUsuario = user.Id,
                         Total = produto.Valor * quantidade
                     };
 
@@ -156,12 +154,7 @@ namespace ProjetoMercadoMVC.Controllers
 
             if (venda != null)
             {
-                //ViewData["IdUsuario"] = new SelectList(_context.Usuario, "Id", "Nome", venda.IdUsuario);
                 vendaAtualizada = await getVendaAtualizada(venda.Id);
-            }
-            else
-            {
-                //ViewData["IdUsuario"] = new SelectList(_context.Usuario, "Id", "Nome");
             }
 
             return View(vendaAtualizada);
@@ -174,7 +167,7 @@ namespace ProjetoMercadoMVC.Controllers
             var venda = await _context.Venda
                 .Include(v => v.Usuario)
                 .Include(v => v.Itens).ThenInclude(i => i.Produto)
-                .FirstOrDefaultAsync(m => m.Id == id && isAdmin == true || (m.IdUsuario == user.Id));
+                .FirstOrDefaultAsync(m => m.Id == id && (isAdmin == true || (m.IdUsuario == user.Id)));
 
             return venda;
         }
