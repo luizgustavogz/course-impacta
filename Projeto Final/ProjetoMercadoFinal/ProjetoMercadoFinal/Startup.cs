@@ -70,11 +70,20 @@ namespace ProjetoMercadoFinal
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ProjetoMercadoFinal v1"));
             }
 
+            app.UseCors(options =>
+            {
+                options.AllowAnyOrigin();
+                options.AllowAnyMethod();
+                options.AllowAnyHeader();
+                options.WithExposedHeaders("Content-Disposition");
+            });
+
             app.UseHttpsRedirection();
 
-            app.UseRouting();
-
             app.UseAuthentication();
+
+            app.UseRouting();
+            
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

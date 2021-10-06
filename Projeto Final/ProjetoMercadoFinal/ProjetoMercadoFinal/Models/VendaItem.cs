@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace ProjetoMercadoFinal.Models
@@ -24,6 +25,7 @@ namespace ProjetoMercadoFinal.Models
         public int Quantidade { get; set; }
 
         [ForeignKey("IdVenda")]
+        [JsonIgnore]
         public virtual Venda Venda { get; set; }
 
         [ForeignKey("IdProduto")]

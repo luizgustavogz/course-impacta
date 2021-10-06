@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace ProjetoMercadoFinal.Models
@@ -24,9 +25,7 @@ namespace ProjetoMercadoFinal.Models
         [DataType(DataType.Date)]
         public DateTime Validade { get; set; }
 
-        [NotMapped]
-        public string ValorAExibir { get; set; }
-
+        [JsonIgnore]
         public virtual ICollection<VendaItem> VendasDoProduto { get; set; }
     }
 }

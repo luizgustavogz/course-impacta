@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ namespace ProjetoMercadoFinal.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "ADMIN")]
     public class ProdutosController : ControllerBase
     {
         private readonly ProjetoMercadoFinalDBContext _context;
@@ -22,6 +24,7 @@ namespace ProjetoMercadoFinal.Controllers
 
         // GET: api/Produtos
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Produto>>> GetProduto()
         {
             return await _context.Produto.ToListAsync();

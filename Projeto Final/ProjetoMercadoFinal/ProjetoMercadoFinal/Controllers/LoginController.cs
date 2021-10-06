@@ -1,4 +1,4 @@
-﻿using ProjetoMercadoFinal.Dtos;
+﻿using ProjetoMercadoFinal.Dto;
 using ProjetoMercadoFinal.Models;
 using ProjetoMercadoFinal.Services;
 using ProjetoMercadoFinal.Utils;

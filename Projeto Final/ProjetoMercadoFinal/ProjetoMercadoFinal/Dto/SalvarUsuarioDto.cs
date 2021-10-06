@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ProjetoMercadoFinal.Dtos
+namespace ProjetoMercadoFinal.Dto
 {
     public class SalvarUsuarioDto
     {

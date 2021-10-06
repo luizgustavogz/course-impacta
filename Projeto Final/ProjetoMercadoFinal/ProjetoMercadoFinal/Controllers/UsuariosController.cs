@@ -5,19 +5,19 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ProjetoMercadoFinal.Models;
 using System.Security.Cryptography;
 using System.Text;
-using ProjetoMercadoFinal.Utils;
-using ProjetoMercadoFinal.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using ProjetoMercadoFinal.Models;
+using ProjetoMercadoFinal.Dto;
+using ProjetoMercadoFinal.Utils;
 
-namespace TesteJWT.Controllers
+namespace ProjetoMercadoFinal.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = "ADMIN")]
     public class UsuariosController : ControllerBase
     {
         private readonly ProjetoMercadoFinalDBContext _context;

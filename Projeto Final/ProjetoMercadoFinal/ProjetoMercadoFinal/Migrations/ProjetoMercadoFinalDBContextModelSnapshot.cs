@@ -19,58 +19,6 @@ namespace ProjetoMercadoFinal.Migrations
                 .HasAnnotation("ProductVersion", "5.0.10")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("IdentityUser");
-                });
-
             modelBuilder.Entity("ProjetoMercadoFinal.Models.Produto", b =>
                 {
                     b.Property<int>("Id")
@@ -133,8 +81,8 @@ namespace ProjetoMercadoFinal.Migrations
                         .HasColumnName("Id_Venda")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("IdUsuario")
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<int>("IdUsuario")
+                        .HasColumnType("int")
                         .HasColumnName("Id_Usuario");
 
                     b.Property<decimal>("Total")
@@ -179,10 +127,11 @@ namespace ProjetoMercadoFinal.Migrations
 
             modelBuilder.Entity("ProjetoMercadoFinal.Models.Venda", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Usuario")
-                        .WithMany()
+                    b.HasOne("ProjetoMercadoFinal.Models.Usuario", "Usuario")
+                        .WithMany("Vendas")
                         .HasForeignKey("IdUsuario")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Usuario");
                 });
@@ -209,6 +158,11 @@ namespace ProjetoMercadoFinal.Migrations
             modelBuilder.Entity("ProjetoMercadoFinal.Models.Produto", b =>
                 {
                     b.Navigation("VendasDoProduto");
+                });
+
+            modelBuilder.Entity("ProjetoMercadoFinal.Models.Usuario", b =>
+                {
+                    b.Navigation("Vendas");
                 });
 
             modelBuilder.Entity("ProjetoMercadoFinal.Models.Venda", b =>

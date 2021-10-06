@@ -6,32 +6,78 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjetoMercadoFinal.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using ProjetoMercadoFinal.Dto;
 
 namespace ProjetoMercadoFinal.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class VendasController : ControllerBase
+    [Authorize]
+    public class VendaController : ControllerBase
     {
         private readonly ProjetoMercadoFinalDBContext _context;
 
-        public VendasController(ProjetoMercadoFinalDBContext context)
+        public VendaController(ProjetoMercadoFinalDBContext context)
         {
             _context = context;
         }
 
-        // GET: api/Vendas
+        // GET: api/Venda
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Venda>>> GetVenda()
         {
-            return await _context.Venda.ToListAsync();
+            var isAdmin = User.IsInRole("ADMIN");
+
+            Usuario logged = null;
+            if (!isAdmin)
+            {
+                var idUsuarioLogged = User.Claims.Where(e => e.Type == ClaimTypes.Sid).Select(e => e.Value).FirstOrDefault();
+
+                if (!string.IsNullOrEmpty(idUsuarioLogged))
+                {
+                    logged = await _context.Usuario.FirstOrDefaultAsync(u => u.Id == int.Parse(idUsuarioLogged));
+                }
+
+                if (logged == null)
+                {
+                    return BadRequest("Usuario nao encontrado");
+                }
+            }
+
+            var projetoProjetoMercadoFinalContext = _context.Venda
+                    .Include(v => v.Usuario)
+                    .Include(v => v.Itens)
+                    .ThenInclude(i => i.Produto)
+                    .Where(v => isAdmin == true || (v.IdUsuario == logged.Id));
+            var result = await projetoProjetoMercadoFinalContext.ToListAsync();
+            return Ok(result);
         }
 
-        // GET: api/Vendas/5
+        // GET: api/Venda/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Venda>> GetVenda(int id)
         {
-            var venda = await _context.Venda.FindAsync(id);
+            var isAdmin = User.IsInRole("ADMIN");
+
+            Usuario logged = null;
+            if (!isAdmin)
+            {
+                var idUsuarioLogged = User.Claims.Where(e => e.Type == ClaimTypes.Sid).Select(e => e.Value).FirstOrDefault();
+
+                if (!string.IsNullOrEmpty(idUsuarioLogged))
+                {
+                    logged = await _context.Usuario.FirstOrDefaultAsync(u => u.Id == int.Parse(idUsuarioLogged));
+                }
+
+                if (logged == null)
+                {
+                    return BadRequest("Usuario nao encontrado");
+                }
+            }
+
+            var venda = await _context.Venda.FirstOrDefaultAsync(v => v.Id == id && (isAdmin || v.IdUsuario == logged.Id));
 
             if (venda == null)
             {
@@ -41,67 +87,58 @@ namespace ProjetoMercadoFinal.Controllers
             return venda;
         }
 
-        // PUT: api/Vendas/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutVenda(int id, Venda venda)
-        {
-            if (id != venda.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(venda).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!VendaExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Vendas
+        // POST: api/Venda
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Venda>> PostVenda(Venda venda)
+        public async Task<ActionResult<Venda>> PostVenda(VendaDto[] items)
         {
+            var idUsuarioLogged = User.Claims.Where(e => e.Type == ClaimTypes.Sid).Select(e => e.Value).FirstOrDefault();
+            var idUsuario = int.Parse(idUsuarioLogged);
+
+            var logged = await _context.Usuario.FirstOrDefaultAsync(u => u.Id == int.Parse(idUsuarioLogged));
+
+            if (logged == null)
+            {
+                return BadRequest("Usuario nao encontrado");
+            }
+
+            var venda = new Venda() { IdUsuario = idUsuario, Total = 0 };
+
             _context.Venda.Add(venda);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetVenda", new { id = venda.Id }, venda);
-        }
-
-        // DELETE: api/Vendas/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteVenda(int id)
-        {
-            var venda = await _context.Venda.FindAsync(id);
-            if (venda == null)
+            VendaItem item;
+            decimal total = 0;
+            foreach (var i in items)
             {
-                return NotFound();
+                var produto = _context.Produto.Find(i.IdProduto);
+
+                if (produto == null)
+                {
+                    continue;
+                }
+
+                item = new VendaItem()
+                {
+                    IdProduto = i.IdProduto,
+                    IdVenda = venda.Id,
+                    Quantidade = i.Quantidade
+                };
+
+                _context.VendaItem.Add(item);
+                await _context.SaveChangesAsync();
+
+                total += produto.Valor * i.Quantidade;
             }
 
-            _context.Venda.Remove(venda);
+            venda.Total = total;
             await _context.SaveChangesAsync();
 
-            return NoContent();
-        }
-
-        private bool VendaExists(int id)
-        {
-            return _context.Venda.Any(e => e.Id == id);
+            return Ok(_context.Venda
+                    .Include(v => v.Usuario)
+                    .Include(v => v.Itens)
+                    .ThenInclude(i => i.Produto)
+                    .Where(v => v.Id == venda.Id));
         }
     }
 }

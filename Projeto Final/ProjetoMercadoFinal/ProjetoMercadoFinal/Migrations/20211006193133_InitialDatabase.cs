@@ -8,31 +8,6 @@ namespace ProjetoMercadoFinal.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "IdentityUser",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_IdentityUser", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "tblProduto",
                 columns: table => new
                 {
@@ -48,22 +23,38 @@ namespace ProjetoMercadoFinal.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "TblUsuario",
+                columns: table => new
+                {
+                    ID_Usuario = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NM_Usuario = table.Column<string>(type: "VARCHAR(100)", nullable: true),
+                    CD_Email = table.Column<string>(type: "VARCHAR(60)", nullable: true),
+                    CD_Senha = table.Column<string>(type: "VARCHAR(100)", nullable: true),
+                    CD_Perfil_ = table.Column<string>(type: "VARCHAR(100)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TblUsuario", x => x.ID_Usuario);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "tblVenda",
                 columns: table => new
                 {
                     Id_Venda = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Id_Usuario = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Id_Usuario = table.Column<int>(type: "int", nullable: false),
                     Vlr_Total = table.Column<decimal>(type: "decimal(10,2)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_tblVenda", x => x.Id_Venda);
                     table.ForeignKey(
-                        name: "FK_tblVenda_IdentityUser_Id_Usuario",
+                        name: "FK_tblVenda_TblUsuario_Id_Usuario",
                         column: x => x.Id_Usuario,
-                        principalTable: "IdentityUser",
-                        principalColumn: "Id",
+                        principalTable: "TblUsuario",
+                        principalColumn: "ID_Usuario",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -122,7 +113,7 @@ namespace ProjetoMercadoFinal.Migrations
                 name: "tblVenda");
 
             migrationBuilder.DropTable(
-                name: "IdentityUser");
+                name: "TblUsuario");
         }
     }
 }

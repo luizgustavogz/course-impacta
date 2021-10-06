@@ -27,5 +27,8 @@ namespace ProjetoMercadoFinal.Models
 
         [Column("CD_Perfil_", TypeName = "VARCHAR(100)")]
         public string Perfil { get; set; }
+
+        [JsonIgnore]
+        public virtual ICollection<Venda> Vendas { get; set; }
     }
 }

@@ -15,14 +15,14 @@ namespace ProjetoMercadoFinal.Models
         [Column("Id_Venda")]
         public int Id { get; set; }
 
-        [Column("Id_Usuario", TypeName = "nvarchar(450)")]
-        public string IdUsuario { get; set; }
+        [Column("Id_Usuario")]
+        public int IdUsuario { get; set; }
 
         [Column("Vlr_Total", TypeName = "decimal(10,2)")]
         public decimal Total { get; set; }
 
         [ForeignKey("IdUsuario")]
-        public virtual IdentityUser Usuario { get; set; }
+        public virtual Usuario Usuario { get; set; }
 
         public virtual ICollection<VendaItem> Itens { get; set; }
     }
